@@ -70,7 +70,7 @@ func (c *Client) PushMetrics(metrics []Metric) error {
 
 	req, err := http.NewRequest(http.MethodPost, c.url, bytes.NewReader(bodyBytes))
 	if err != nil {
-		return errors.WithMessage(err, "n9e client new httpclient request failed")
+		return errors.WithMessage(err, "n9e client new http request failed")
 	}
 
 	req.Header.Set("Content-Type", "application/json")
@@ -80,7 +80,7 @@ func (c *Client) PushMetrics(metrics []Metric) error {
 
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
-		return errors.WithMessage(err, "n9e client httpclient do request failed")
+		return errors.WithMessage(err, "n9e client http do request failed")
 	}
 	defer func() { _ = resp.Body.Close() }()
 

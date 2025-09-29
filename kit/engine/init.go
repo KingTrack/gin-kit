@@ -6,6 +6,7 @@ import (
 	"github.com/KingTrack/gin-kit/kit/conf"
 	contextregistry "github.com/KingTrack/gin-kit/kit/internal/context/registry"
 	datacenterregistry "github.com/KingTrack/gin-kit/kit/internal/datacenter/registry"
+	httpclientregistry "github.com/KingTrack/gin-kit/kit/internal/httpclient/registry"
 	loggerregistry "github.com/KingTrack/gin-kit/kit/internal/logger/registry"
 	metricregistry "github.com/KingTrack/gin-kit/kit/internal/metric/registry"
 	mysqlregistry "github.com/KingTrack/gin-kit/kit/internal/mysql/registry"
@@ -18,10 +19,11 @@ import (
 type Engine struct {
 	path                   string
 	config                 *conf.Config
+	httpClientRegistry     *httpclientregistry.Registry
 	mysqlRegistry          *mysqlregistry.Registry
 	redisRegistry          *redisregistry.Registry
-	globalResourceFuncs    []ResourceFunc
-	namespaceResourceFuncs []ResourceFunc
+	globalResourceFuncs    []ResourceOption
+	namespaceResourceFuncs []ResourceOption
 	tracerRegistry         *tracerregistry.Registry
 	loggerRegistry         *loggerregistry.Registry
 	metricRegistry         *metricregistry.Registry
@@ -43,6 +45,7 @@ func New(path string) *Engine {
 
 	engine := &Engine{
 		path:               path,
+		httpClientRegistry: httpclientregistry.New(),
 		mysqlRegistry:      mysqlregistry.New(),
 		redisRegistry:      redisregistry.New(),
 		tracerRegistry:     tracerregistry.New(),
@@ -52,16 +55,17 @@ func New(path string) *Engine {
 		datacenterRegistry: datacenterregistry.New(),
 	}
 
-	engine.globalResourceFuncs = []ResourceFunc{
-		initLogger(engine.loggerRegistry),
-		initMetric(engine.metricRegistry),
-		initTracer(engine.tracerRegistry),
-		initDateCenter(engine.datacenterRegistry),
+	engine.globalResourceFuncs = []ResourceOption{
+		initLogger(engine),
+		initMetric(engine),
+		initTracer(engine),
+		initDateCenter(engine),
 	}
 
-	engine.namespaceResourceFuncs = []ResourceFunc{
-		initMySQL(engine.mysqlRegistry),
-		initRedis(engine.redisRegistry),
+	engine.namespaceResourceFuncs = []ResourceOption{
+		initHTTPClient(engine),
+		initMySQL(engine),
+		initRedis(engine),
 	}
 
 	return engine

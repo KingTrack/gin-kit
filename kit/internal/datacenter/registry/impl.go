@@ -16,7 +16,6 @@ import (
 	"github.com/KingTrack/gin-kit/kit/types/datacenter/watcher"
 	httpclientconf "github.com/KingTrack/gin-kit/kit/types/httpclient/conf"
 	"github.com/pkg/errors"
-	"go.uber.org/multierr"
 )
 
 type Registry struct {
@@ -90,30 +89,21 @@ func (r *Registry) Init(ctx context.Context, config *conf.Config) error {
 	return nil
 }
 
-func (r *Registry) AddHttpClient(ctx context.Context, configs []httpclientconf.Config) error {
-	var errs error
-	for _, v := range configs {
-		config := v
-
-		if config.Discovery.IsDatacenter() {
-			if err := r.AddServiceFromDatacenter(ctx, config.ServiceName); err != nil {
-				errs = multierr.Append(errs, err)
-			}
-			continue
+func (r *Registry) AddHTTPClient(ctx context.Context, config *httpclientconf.Config) error {
+	if config.Discovery.IsDatacenter() {
+		if err := r.AddServiceToDatacenter(ctx, config.ServiceName); err != nil {
+			return errors.WithMessage(err, "datacenter registry add http client to datacenter failed")
 		}
-
-		if err := r.AddServiceFromLocal(ctx, &config); err != nil {
-			errs = multierr.Append(errs, err)
-		}
+		return nil
 	}
 
-	if errs != nil {
-		return errors.WithMessage(errs, "datacenter registry add http client failed")
+	if err := r.AddServiceToLocal(ctx, config); err != nil {
+		return errors.WithMessage(err, "datacenter registry add http client to local failed")
 	}
 	return nil
 }
 
-func (r *Registry) AddServiceFromDatacenter(ctx context.Context, serviceName string) error {
+func (r *Registry) AddServiceToDatacenter(ctx context.Context, serviceName string) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
@@ -127,7 +117,7 @@ func (r *Registry) AddServiceFromDatacenter(ctx context.Context, serviceName str
 	return nil
 }
 
-func (r *Registry) AddServiceFromLocal(ctx context.Context, config *httpclientconf.Config) error {
+func (r *Registry) AddServiceToLocal(ctx context.Context, config *httpclientconf.Config) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 

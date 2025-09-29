@@ -5,6 +5,7 @@ import (
 	"github.com/KingTrack/gin-kit/kit/plugin/decoder"
 	"github.com/KingTrack/gin-kit/kit/plugin/source"
 	datacenterconfig "github.com/KingTrack/gin-kit/kit/types/datacenter/conf"
+	httpclientconf "github.com/KingTrack/gin-kit/kit/types/httpclient/conf"
 	serverconfig "github.com/KingTrack/gin-kit/kit/types/httpserver/conf"
 	loggerconfig "github.com/KingTrack/gin-kit/kit/types/logger/conf"
 	metricconfig "github.com/KingTrack/gin-kit/kit/types/metric/conf"
@@ -21,6 +22,7 @@ type Config struct {
 	Tracer     tracerconfig.Config     `toml:"tracer" json:"tracer" yaml:"tracer"`
 	Logger     loggerconfig.Config     `toml:"logger" json:"logger" yaml:"logger"`
 	Datacenter datacenterconfig.Config `toml:"datacenter" json:"datacenter" yaml:"datacenter"`
+	HTTPClient []httpclientconf.Config `toml:"http_client" json:"http_client" yaml:"http_client"`
 	MySQL      []mysqlconfig.Config    `toml:"mysql" json:"mysql" yaml:"mysql"`
 	Redis      []redisconfig.Config    `toml:"redis" json:"redis" yaml:"redis"`
 }

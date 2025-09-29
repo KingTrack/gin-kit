@@ -28,7 +28,7 @@ const (
 	OutputWarn     OutputEnum = "warn"
 	OutputError    OutputEnum = "error"
 	OutputAccess   OutputEnum = "access"   // 访问日志
-	OutputBusiness OutputEnum = "business" // 执行日志，sql 执行、httpclient app 执行、redis 执行、kafka 执行、redis 执行日志
+	OutputBusiness OutputEnum = "business" // 执行日志，sql 执行、http app 执行、redis 执行、kafka 执行、redis 执行日志
 	OutputGen      OutputEnum = "gen"      // 框架日志，启动、关停、调试相关日志
 	OutputCrash    OutputEnum = "crash"    // 崩溃日志
 	OutputData     OutputEnum = "data"     // 数据埋点日志
