@@ -714,31 +714,290 @@ git commit -m "fix(logger): resolve memory leak in log rotation"
 git commit -m "docs(readme): update quick start guide"
 ```
 
-### 3. Pull Request 流程
+### 3. 分支管理规范
 
-1. **创建功能分支**
+#### 🌳 分支类型
+
+我们使用 **Git Flow** 分支模型，主要包含以下分支类型：
+
+| 分支类型 | 命名规范 | 用途 | 生命周期 |
+|---------|----------|------|----------|
+| `main` | `main` | 主分支，保持稳定可发布状态 | 永久 |
+| `develop` | `develop` | 开发分支，集成最新功能 | 永久 |
+| `feature` | `feature/{功能描述}` | 功能开发分支 | 临时 |
+| `hotfix` | `hotfix/{版本号}-{问题描述}` | 紧急修复分支 | 临时 |
+| `release` | `release/{版本号}` | 发布准备分支 | 临时 |
+| `bugfix` | `bugfix/{问题描述}` | Bug 修复分支 | 临时 |
+
+#### 🎯 功能分支规范（Feature Branch）
+
+**命名格式：**
+```
+feature/{类型}-{简短描述}
+```
+
+**分支类型前缀：**
+- `feature/add-` : 新增功能
+- `feature/update-` : 功能更新
+- `feature/remove-` : 功能移除
+- `feature/refactor-` : 代码重构
+- `feature/optimize-` : 性能优化
+
+**示例：**
 ```bash
+# 新增功能分支
+feature/add-rate-limiting-middleware
+feature/add-redis-cluster-support
+feature/add-grpc-server
+
+# 功能更新分支
+feature/update-logger-format
+feature/update-metric-labels
+
+# 重构分支
+feature/refactor-engine-initialization
+feature/refactor-registry-pattern
+
+# 优化分支
+feature/optimize-connection-pool
+feature/optimize-memory-usage
+```
+
+#### 🔧 创建和管理功能分支
+
+**1. 创建新功能分支**
+```bash
+# 从 develop 分支创建功能分支
+git checkout develop
+git pull upstream develop
+git checkout -b feature/add-rate-limiting-middleware
+```
+
+**2. 功能开发过程**
+```bash
+# 定期同步 develop 分支的更新
+git checkout develop
+git pull upstream develop
+git checkout feature/add-rate-limiting-middleware
+git merge develop  # 或使用 rebase: git rebase develop
+
+# 提交代码
+git add .
+git commit -m "feat(middleware): add rate limiting middleware"
+
+# 推送到远程仓库
+git push origin feature/add-rate-limiting-middleware
+```
+
+**3. 完成功能开发**
+```bash
+# 确保分支是最新的
+git checkout develop
+git pull upstream develop
+git checkout feature/add-rate-limiting-middleware
+git rebase develop  # 保持提交历史整洁
+
+# 推送最终版本
+git push origin feature/add-rate-limiting-middleware --force-with-lease
+```
+
+#### 🐛 Bug 修复分支规范
+
+**命名格式：**
+```
+bugfix/{问题类型}-{简短描述}
+```
+
+**问题类型：**
+- `memory-leak` : 内存泄漏
+- `deadlock` : 死锁问题
+- `crash` : 程序崩溃
+- `data-loss` : 数据丢失
+- `security` : 安全问题
+- `performance` : 性能问题
+
+**示例：**
+```bash
+bugfix/memory-leak-in-context-pool
+bugfix/deadlock-in-mysql-registry
+bugfix/crash-on-invalid-config
+```
+
+#### 🚨 热修复分支规范
+
+**命名格式：**
+```
+hotfix/{版本号}-{问题描述}
+```
+
+**示例：**
+```bash
+hotfix/v1.2.1-critical-memory-leak
+hotfix/v1.2.1-security-vulnerability
+```
+
+**热修复流程：**
+```bash
+# 从 main 分支创建热修复分支
 git checkout main
 git pull upstream main
-git checkout -b feature/add-new-middleware
+git checkout -b hotfix/v1.2.1-critical-memory-leak
+
+# 进行修复
+# ...
+
+# 提交修复
+git commit -m "fix(engine): resolve critical memory leak in context pool"
+
+# 合并到 main 和 develop
+git checkout main
+git merge hotfix/v1.2.1-critical-memory-leak
+git tag v1.2.1
+
+git checkout develop
+git merge hotfix/v1.2.1-critical-memory-leak
+
+# 删除热修复分支
+git branch -d hotfix/v1.2.1-critical-memory-leak
 ```
 
-2. **开发和测试**
+#### 📦 发布分支规范
+
+**命名格式：**
+```
+release/{版本号}
+```
+
+**示例：**
 ```bash
-# 进行开发
-# 运行测试
+release/v1.3.0
+release/v2.0.0-beta.1
+```
+
+**发布流程：**
+```bash
+# 从 develop 创建发布分支
+git checkout develop
+git pull upstream develop
+git checkout -b release/v1.3.0
+
+# 更新版本号、文档等
+# 只允许 bug 修复，不允许新功能
+
+# 完成发布准备后合并到 main
+git checkout main
+git merge release/v1.3.0
+git tag v1.3.0
+
+# 合并回 develop
+git checkout develop
+git merge release/v1.3.0
+
+# 删除发布分支
+git branch -d release/v1.3.0
+```
+
+#### ⚡ 分支操作最佳实践
+
+**1. 分支命名规则**
+- 使用小写字母和连字符
+- 描述要简短但有意义
+- 避免使用特殊字符
+- 包含工作类型和简短描述
+
+**2. 提交频率**
+```bash
+# 👍 推荐：小而频繁的提交
+git commit -m "feat(middleware): add rate limiter interface"
+git commit -m "feat(middleware): implement token bucket algorithm"
+git commit -m "feat(middleware): add rate limiter tests"
+git commit -m "docs(middleware): add rate limiter documentation"
+
+# 👎 不推荐：大而少的提交
+git commit -m "feat(middleware): add complete rate limiting functionality"
+```
+
+**3. 分支同步**
+```bash
+# 定期同步上游更新（建议每天至少一次）
+git checkout develop
+git pull upstream develop
+git checkout feature/your-branch
+git rebase develop  # 保持提交历史整洁
+```
+
+**4. 分支清理**
+```bash
+# 功能合并后删除本地分支
+git branch -d feature/add-rate-limiting-middleware
+
+# 删除远程分支
+git push origin --delete feature/add-rate-limiting-middleware
+
+# 清理已合并的分支
+git branch --merged | grep -v "\*\|main\|develop" | xargs -n 1 git branch -d
+```
+
+### 4. Pull Request 流程
+
+**1. 准备 PR**
+```bash
+# 确保分支是最新的
+git checkout develop
+git pull upstream develop
+git checkout feature/add-rate-limiting-middleware
+git rebase develop
+
+# 运行完整测试
 go test ./...
-# 提交代码
-git commit -m "feat(middleware): add rate limiting middleware"
+go vet ./...
+golangci-lint run
+
+# 推送到远程
+git push origin feature/add-rate-limiting-middleware --force-with-lease
 ```
 
-3. **推送和创建 PR**
-```bash
-git push origin feature/add-new-middleware
-# 在 GitHub 上创建 Pull Request
+**2. 创建 PR**
+- 填写详细的 PR 模板
+- 关联相关的 Issue
+- 添加适当的标签
+- 请求代码审查
+
+**3. PR 要求**
+- 标题遵循 Conventional Commits 规范
+- 包含功能说明和测试说明
+- 所有 CI 检查通过
+- 至少一个维护者审批
+
+**PR 模板示例：**
+```markdown
+## 📝 变更说明
+简要描述本次变更的内容
+
+## 🎯 变更类型
+- [ ] Bug 修复
+- [x] 新功能
+- [ ] 重大变更
+- [ ] 文档更新
+
+## 🧪 测试
+- [ ] 单元测试通过
+- [ ] 集成测试通过
+- [ ] 手动测试完成
+
+## 📋 检查清单
+- [x] 代码遵循项目规范
+- [x] 添加了必要的测试
+- [x] 更新了相关文档
+- [x] 运行了 linter 检查
+
+## 📸 截图（如适用）
+
+## 🔗 相关链接
+Closes #123
 ```
 
-### 4. 代码审查要求
+### 5. 代码审查要求
 
 - 至少需要 1 个 maintainer 审批
 - 所有 CI 检查必须通过
