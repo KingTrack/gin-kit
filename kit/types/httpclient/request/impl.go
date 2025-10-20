@@ -85,6 +85,3 @@ func (r *Request) SetMetricName(name string) *Request {
 func (r *Request) GetError() error {
 	return r.err
 }
-
-// clientReq := request.New().SetXxx().SetXxx()
-// clientResp, err := httpClient.Call(ctx, clientReq)

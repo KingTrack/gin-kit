@@ -13,17 +13,22 @@ const (
 
 type Instance struct {
 	ServiceName string            `json:"service_name"` // 服务名字唯一标识
+	Schema      string            `json:"schema"`
 	IP          string            `json:"ip"`
 	Port        int               `json:"port"`
 	Weight      int               `json:"weight"`
 	Meta        map[string]string `json:"tags"`
 }
 
+func (i *Instance) GetHost() string {
+	return fmt.Sprintf("%s:%d", i.IP, i.Port)
+}
+
 func (i *Instance) IsEqualEndpoint(v *Instance) bool {
 	if v == nil {
 		return false
 	}
-	return i.IP == v.IP
+	return i.IP == v.IP && i.Port == v.Port
 }
 
 func (i *Instance) GetMeta() map[string]string {

@@ -4,11 +4,11 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/KingTrack/gin-kit/kit/types/httpclient/request"
-	"github.com/KingTrack/gin-kit/kit/types/httpclient/response"
-
+	clientcontext "github.com/KingTrack/gin-kit/kit/internal/httpclient/context"
 	"github.com/KingTrack/gin-kit/kit/runtime"
 	"github.com/KingTrack/gin-kit/kit/types/httpclient/conf"
+	"github.com/KingTrack/gin-kit/kit/types/httpclient/request"
+	"github.com/KingTrack/gin-kit/kit/types/httpclient/response"
 )
 
 type Client struct {
@@ -17,7 +17,7 @@ type Client struct {
 }
 
 func New() *Client {
-
+	return &Client{}
 }
 
 func (c *Client) Call(ctx context.Context, req *request.Request) (*response.Response, error) {
@@ -30,7 +30,33 @@ func (c *Client) Call(ctx context.Context, req *request.Request) (*response.Resp
 		return nil, err
 	}
 
-	// 支持插件流程
+	clientCtx := clientcontext.New(ctx, req, instance)
+	clientCtx.Use(c.call())
+	clientCtx.Next()
 
-	return nil, nil
+	return clientCtx.Resp, clientCtx.Err
+}
+
+func (c *Client) build(cc *clientcontext.Context) *http.Request {
+	httpReq := cc.Req.Request.Clone(cc.Ctx)
+
+	if len(httpReq.URL.Scheme) == 0 {
+		httpReq.URL.Scheme = cc.Instance.Schema
+	}
+	if len(httpReq.URL.Host) == 0 {
+		httpReq.URL.Host = cc.Instance.GetHost()
+	}
+
+	return httpReq
+}
+
+func (c *Client) call() clientcontext.HandlerFunc {
+	return func(cc *clientcontext.Context) {
+		httpResp, err := c.Do(c.build(cc))
+		if err != nil {
+			cc.Err = err
+			return
+		}
+		cc.Resp.Response = httpResp
+	}
 }

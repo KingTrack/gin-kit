@@ -3,6 +3,7 @@ package engine
 import (
 	contextregistry "github.com/KingTrack/gin-kit/kit/internal/context/registry"
 	datacenterregistry "github.com/KingTrack/gin-kit/kit/internal/datacenter/registry"
+	httpclientregistry "github.com/KingTrack/gin-kit/kit/internal/httpclient/registry"
 	loggerregistry "github.com/KingTrack/gin-kit/kit/internal/logger/registry"
 	metricregistry "github.com/KingTrack/gin-kit/kit/internal/metric/registry"
 	mysqlregistry "github.com/KingTrack/gin-kit/kit/internal/mysql/registry"
@@ -46,4 +47,8 @@ func (e *Engine) ContextRegistry() *contextregistry.Registry {
 
 func (e *Engine) DatacenterRegistry() *datacenterregistry.Registry {
 	return e.datacenterRegistry
+}
+
+func (e *Engine) HTTPClientRegistry() *httpclientregistry.Registry {
+	return e.httpClientRegistry
 }

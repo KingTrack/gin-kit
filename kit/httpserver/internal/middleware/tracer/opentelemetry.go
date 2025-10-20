@@ -30,7 +30,7 @@ func (m *Middleware) traceWithOTel(c *gin.Context, tracerClient trace.Tracer) {
 	}()
 
 	spanName := m.getSpanName(c)
-	// 从 HTTP Header 提取 Trace Context
+	// 从 HTTP Header 提取 Trace context
 	propagator := otel.GetTextMapPropagator()
 	wireCtx := propagator.Extract(baseCtx, propagation.HeaderCarrier(c.Request.Header))
 

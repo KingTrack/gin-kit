@@ -2,6 +2,7 @@ package registry
 
 import (
 	"context"
+	"net/http"
 	"sync"
 
 	"github.com/KingTrack/gin-kit/kit/internal/httpclient/client"
@@ -19,6 +20,22 @@ func New() *Registry {
 	}
 }
 
-func (r *Registry) AddClient(ctx context.Context, config *conf.Config) error {
+func (r *Registry) Add(ctx context.Context, config *conf.Config) error {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+
+	client.New()
+
+	return nil
+}
+
+func (r *Registry) Get(name string) *client.Client {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+
+	return r.clients[name]
+}
+
+func (r *Registry) AddClient(name string, client *http.Client) error {
 	return nil
 }

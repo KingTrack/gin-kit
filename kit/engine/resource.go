@@ -99,7 +99,7 @@ func initHTTPClient(e *Engine) ResourceOption {
 		var errs error
 		for _, v := range config.HTTPClient {
 			clientConfig := v
-			err := e.httpClientRegistry.AddClient(ctx, &clientConfig)
+			err := e.httpClientRegistry.Add(ctx, &clientConfig)
 			if err != nil {
 				errs = multierr.Append(errs, err)
 				continue

@@ -20,7 +20,7 @@ func (m *Middleware) Build() gin.HandlerFunc {
 			return
 		}
 
-		// 1. 创建并初始化 Context
+		// 1. 创建并初始化 context
 		startTime := time.Now()
 		newContext := runtime.Get().ContextRegistry().GetPool().Get()
 		newContext.SetRequestStartTime(startTime)
@@ -36,7 +36,7 @@ func (m *Middleware) Build() gin.HandlerFunc {
 		// 4. 执行后续逻辑
 		c.Next()
 
-		// 5. 清理 Context
+		// 5. 清理 context
 		runtime.Get().ContextRegistry().Remove(c)
 	}
 }

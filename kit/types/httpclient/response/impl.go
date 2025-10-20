@@ -1,3 +1,7 @@
 package response
 
-type Response struct{}
+import "net/http"
+
+type Response struct {
+	*http.Response
+}

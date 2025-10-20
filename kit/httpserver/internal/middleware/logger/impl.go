@@ -58,7 +58,7 @@ func (m *Middleware) getMessage(c *gin.Context) string {
 	var requestBody []byte
 	var responseBody []byte
 
-	// 从 Context Registry 获取数据（已经根据配置进行了大小限制和存储控制）
+	// 从 context Registry 获取数据（已经根据配置进行了大小限制和存储控制）
 	if cc := runtime.Get().ContextRegistry().Load(c); cc != nil {
 		startTime = cc.GetRequestStartTime()
 		appCode = cc.GetAppCode()
