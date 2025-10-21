@@ -8,6 +8,7 @@ import (
 	"time"
 
 	clientcontext "github.com/KingTrack/gin-kit/kit/internal/httpclient/context"
+	"github.com/KingTrack/gin-kit/kit/internal/httpclient/middleware"
 	"github.com/KingTrack/gin-kit/kit/runtime"
 	"github.com/KingTrack/gin-kit/kit/types/httpclient/conf"
 	"github.com/KingTrack/gin-kit/kit/types/httpclient/request"
@@ -54,7 +55,10 @@ func (c *Client) Do(ctx context.Context, req *request.Request) (*response.Respon
 	}
 
 	clientCtx := clientcontext.New(ctx, req, instance)
-	clientCtx.Use(c.call())
+	clientCtx.Use(
+		middleware.Retry(&c.config.RetryerConfig),
+		c.call(),
+	)
 	clientCtx.Next()
 
 	return clientCtx.Resp, clientCtx.Err

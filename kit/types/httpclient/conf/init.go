@@ -27,6 +27,14 @@ type Config struct {
 	IdleConnTimeoutSec int           `toml:"idle_conn_timeout_sec" json:"idle_conn_timeout_sec" yaml:"idle_conn_timeout_sec"`
 	TimeoutMs          int           `toml:"timeout_ms" json:"timeout_ms" yaml:"timeout_ms"`
 	ProxyURL           string        `toml:"proxy_url" json:"proxy_url" yaml:"proxy_url"`
+	RetryerConfig      RetryerConfig `toml:"retryer_config" json:"retryer_config" yaml:"retryer_config"`
+}
+
+type RetryerConfig struct {
+	RetryTimes   int     `toml:"retry_times" json:"retry_times" yaml:"retry_times"`
+	BaseDelayMs  int     `toml:"base_delay_ms" json:"base_delay_ms" yaml:"base_delay_ms"`
+	MaxDelayMs   int     `toml:"max_delay_ms" json:"max_delay_ms" yaml:"max_delay_ms"`
+	JitterFactor float64 `toml:"jitter_factor" json:"jitter_factor" yaml:"jitter_factor"`
 }
 
 func (c *Config) ToInstances() []instance.Instance {
