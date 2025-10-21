@@ -2,7 +2,6 @@ package registry
 
 import (
 	"context"
-	"net/http"
 	"sync"
 
 	"github.com/KingTrack/gin-kit/kit/internal/httpclient/client"
@@ -32,8 +31,4 @@ func (r *Registry) Get(name string) *client.Client {
 	defer r.mu.RUnlock()
 
 	return r.clients[name]
-}
-
-func (r *Registry) AddClient(name string, client *http.Client) error {
-	return nil
 }
