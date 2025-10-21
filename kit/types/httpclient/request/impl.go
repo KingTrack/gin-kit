@@ -27,27 +27,27 @@ func New(ctx context.Context) *Request {
 
 func (r *Request) AddHeader(headers map[string]string) *Request {
 	for k, v := range headers {
-		r.Header.Add(k, v)
+		r.Request.Header.Add(k, v)
 	}
 	return r
 }
 
 func (r *Request) SetHeader(headers map[string]string) *Request {
 	for k, v := range headers {
-		r.Header.Set(k, v)
+		r.Request.Header.Set(k, v)
 	}
 	return r
 }
 
 func (r *Request) SetQueryValues(query map[string][]string) *Request {
-	if r.URL == nil {
-		r.URL = &url.URL{}
+	if r.Request.URL == nil {
+		r.Request.URL = &url.URL{}
 	}
 
-	if r.URL.RawQuery == "" {
-		r.URL.RawQuery = url.Values(query).Encode()
+	if r.Request.URL.RawQuery == "" {
+		r.Request.URL.RawQuery = url.Values(query).Encode()
 	} else {
-		r.URL.RawQuery += "&" + url.Values(query).Encode()
+		r.Request.URL.RawQuery += "&" + url.Values(query).Encode()
 	}
 	return r
 }
@@ -58,17 +58,17 @@ func (r *Request) SetURL(rawURL string) *Request {
 		r.err = multierr.Append(r.err, err)
 		return r
 	}
-	r.URL = u
+	r.Request.URL = u
 	return r
 }
 
 func (r *Request) SetMethod(method string) *Request {
-	r.Method = method
+	r.Request.Method = method
 	return r
 }
 
 func (r *Request) SetBodyReader(reader io.Reader) *Request {
-	r.Body = io.NopCloser(reader)
+	r.Request.Body = io.NopCloser(reader)
 	return r
 }
 

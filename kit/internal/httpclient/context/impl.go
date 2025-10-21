@@ -22,7 +22,12 @@ type Context struct {
 }
 
 func New(ctx context.Context, req *request.Request, instance *instance.Instance) *Context {
-	return &Context{Ctx: ctx, Req: req, Instance: instance}
+	return &Context{
+		Ctx:      ctx,
+		Req:      req,
+		Instance: instance,
+		index:    0,
+	}
 }
 
 func (c *Context) Use(hls ...HandlerFunc) {
@@ -30,14 +35,17 @@ func (c *Context) Use(hls ...HandlerFunc) {
 }
 
 func (c *Context) Next() {
-	c.index++
-
-	if c.aborted || c.index >= len(c.handlers) {
+	if c.IsAbort() {
 		return
 	}
 
 	h := c.handlers[c.index]
+	c.index++
 	h(c)
+}
+
+func (c *Context) IsAbort() bool {
+	return c.index >= len(c.handlers) || c.aborted == true
 }
 
 func (c *Context) Abort() {

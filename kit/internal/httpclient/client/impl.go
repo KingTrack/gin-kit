@@ -3,6 +3,7 @@ package client
 import (
 	"context"
 	"net/http"
+	"net/url"
 
 	clientcontext "github.com/KingTrack/gin-kit/kit/internal/httpclient/context"
 	"github.com/KingTrack/gin-kit/kit/runtime"
@@ -40,6 +41,9 @@ func (c *Client) Call(ctx context.Context, req *request.Request) (*response.Resp
 func (c *Client) build(cc *clientcontext.Context) *http.Request {
 	httpReq := cc.Req.Request.Clone(cc.Ctx)
 
+	if httpReq.URL == nil {
+		httpReq.URL = &url.URL{}
+	}
 	if len(httpReq.URL.Scheme) == 0 {
 		httpReq.URL.Scheme = cc.Instance.Schema
 	}
@@ -58,5 +62,6 @@ func (c *Client) call() clientcontext.HandlerFunc {
 			return
 		}
 		cc.Resp.Response = httpResp
+		cc.Next()
 	}
 }
