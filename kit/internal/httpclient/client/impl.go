@@ -16,25 +16,25 @@ import (
 	"github.com/pkg/errors"
 )
 
-type Client struct {
+type HTTPClient struct {
 	config     *conf.Config
 	transports map[string]*http.Transport
 	mu         sync.RWMutex
 }
 
-func New() *Client {
-	return &Client{
+func New() *HTTPClient {
+	return &HTTPClient{
 		transports: make(map[string]*http.Transport, 1),
 	}
 }
 
-func (c *Client) Init(ctx context.Context, config *conf.Config) error {
+func (c *HTTPClient) Init(ctx context.Context, config *conf.Config) error {
 	var fixedURL *url.URL
 	var err error
 	if len(config.ProxyURL) > 0 {
 		fixedURL, err = url.Parse(config.ProxyURL)
 		if err != nil {
-			return errors.WithMessage(err, "httpclient parse proxy url failed")
+			return errors.WithMessagef(err, "http client parse proxy url failed, service_name:%s, proxy_url:%s", config.ServiceName, config.ProxyURL)
 		}
 	}
 	_ = c.getOrAddTransport(fixedURL, config.MaxIdleConns, config.IdleConnTimeoutSec)
@@ -44,7 +44,7 @@ func (c *Client) Init(ctx context.Context, config *conf.Config) error {
 	return nil
 }
 
-func (c *Client) Do(ctx context.Context, req *request.Request) (*response.Response, error) {
+func (c *HTTPClient) Do(ctx context.Context, req *request.Request) (*response.Response, error) {
 	if err := req.GetError(); err != nil {
 		return nil, err
 	}
@@ -64,7 +64,7 @@ func (c *Client) Do(ctx context.Context, req *request.Request) (*response.Respon
 	return clientCtx.Resp, clientCtx.Err
 }
 
-func (c *Client) buildRequest(cc *clientcontext.Context) *http.Request {
+func (c *HTTPClient) buildRequest(cc *clientcontext.Context) *http.Request {
 	httpReq := cc.Req.Request.Clone(cc.Ctx)
 
 	if httpReq.URL == nil {
@@ -80,7 +80,7 @@ func (c *Client) buildRequest(cc *clientcontext.Context) *http.Request {
 	return httpReq
 }
 
-func (c *Client) buildClient(cc *clientcontext.Context) *http.Client {
+func (c *HTTPClient) buildClient(cc *clientcontext.Context) *http.Client {
 	timeout := time.Duration(c.config.TimeoutMs) * time.Millisecond
 	if cc.Req.Timeout.Milliseconds() > 0 {
 		timeout = cc.Req.Timeout
@@ -92,7 +92,7 @@ func (c *Client) buildClient(cc *clientcontext.Context) *http.Client {
 	}
 }
 
-func (c *Client) getOrAddTransport(fixedURL *url.URL, maxIdleConns int, idleConnTimeoutSec int) *http.Transport {
+func (c *HTTPClient) getOrAddTransport(fixedURL *url.URL, maxIdleConns int, idleConnTimeoutSec int) *http.Transport {
 	key := getTransportKey(fixedURL.String())
 
 	c.mu.RLock()
@@ -129,7 +129,7 @@ func getTransportKey(rawURL string) string {
 	return rawURL
 }
 
-func (c *Client) call() clientcontext.HandlerFunc {
+func (c *HTTPClient) call() clientcontext.HandlerFunc {
 	return func(cc *clientcontext.Context) {
 		httpResp, err := c.buildClient(cc).Do(c.buildRequest(cc))
 		if err != nil {

@@ -11,7 +11,7 @@ import (
 
 var (
 	ErrEngineNotInitialized = errors.New("runtime engine not initialized")
-	ErrRegistryNotAvailable = errors.New("mysql tls not available")
+	ErrRegistryNotAvailable = errors.New("mysql registry not available")
 	ErrDBNotFound           = errors.New("mysql db not found")
 )
 

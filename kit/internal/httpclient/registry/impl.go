@@ -9,13 +9,13 @@ import (
 )
 
 type Registry struct {
-	clients map[string]*client.Client
+	clients map[string]*client.HTTPClient
 	mu      sync.RWMutex
 }
 
 func New() *Registry {
 	return &Registry{
-		clients: make(map[string]*client.Client),
+		clients: make(map[string]*client.HTTPClient),
 	}
 }
 
@@ -26,7 +26,7 @@ func (r *Registry) Add(ctx context.Context, config *conf.Config) error {
 	return client.New().Init(ctx, config)
 }
 
-func (r *Registry) Get(name string) *client.Client {
+func (r *Registry) Get(name string) *client.HTTPClient {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 

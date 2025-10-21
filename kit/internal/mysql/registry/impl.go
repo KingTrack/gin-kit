@@ -52,12 +52,12 @@ func (r *Registry) Init(ctx context.Context, configs []conf.Config) error {
 			slaveIndex: 0,
 		}
 
-		r.addOrUpdateDB(ctx, db)
+		r.addOrUpdate(ctx, db)
 	}
 	return nil
 }
 
-func (r *Registry) addOrUpdateDB(ctx context.Context, db *DB) {
+func (r *Registry) addOrUpdate(ctx context.Context, db *DB) {
 	resourceName := tlscontext.GetResourceName(ctx, db.name)
 
 	r.mu.Lock()

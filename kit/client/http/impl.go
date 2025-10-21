@@ -9,6 +9,10 @@ import (
 	"github.com/pkg/errors"
 )
 
+var (
+	ErrHTTPClientNotFound = errors.New("http client not found")
+)
+
 type Client struct {
 	name string
 }
@@ -22,5 +26,5 @@ func (c *Client) Do(ctx context.Context, req *request.Request) (*response.Respon
 		return c.Do(ctx, req)
 	}
 
-	return nil, errors.New("http client is nil")
+	return nil, ErrHTTPClientNotFound
 }
