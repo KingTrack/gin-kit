@@ -8,5 +8,5 @@ import (
 )
 
 type IClient interface {
-	Call(ctx context.Context, req *request.Request) (*response.Response, error)
+	Do(ctx context.Context, req *request.Request) (*response.Response, error)
 }

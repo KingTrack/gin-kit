@@ -5,12 +5,17 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"time"
 
 	"go.uber.org/multierr"
 )
 
 type Request struct {
 	*http.Request
+
+	Timeout  time.Duration
+	ProxyURL *url.URL
+
 	err        error
 	metricName string
 }
@@ -74,6 +79,22 @@ func (r *Request) SetBodyReader(reader io.Reader) *Request {
 
 func (r *Request) SetRequest(raw *http.Request) *Request {
 	r.Request = raw
+	return r
+}
+
+func (r *Request) SetTimeout(timeout time.Duration) *Request {
+	r.Timeout = timeout
+	return r
+}
+
+func (r *Request) SetProxyURL(rawURL string) *Request {
+	u, err := url.Parse(rawURL)
+	if err != nil {
+		r.err = multierr.Append(r.err, err)
+		return r
+	}
+
+	r.ProxyURL = u
 	return r
 }
 

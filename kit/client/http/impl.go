@@ -27,13 +27,13 @@ func New(ctx context.Context, name string, httpClient ...*http.Client) IClient {
 	return &Client{name: name}
 }
 
-func (c *Client) Call(ctx context.Context, req *request.Request) (*response.Response, error) {
+func (c *Client) Do(ctx context.Context, req *request.Request) (*response.Response, error) {
 	if c.err != nil {
 		return nil, c.err
 	}
 
 	if c := runtime.Get().HTTPClientRegistry().Get(c.name); c != nil {
-		return c.Call(ctx, req)
+		return c.Do(ctx, req)
 	}
 
 	return nil, errors.New("http client is nil")

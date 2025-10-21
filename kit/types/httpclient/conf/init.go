@@ -20,10 +20,13 @@ const (
 )
 
 type Config struct {
-	ServiceName string        `toml:"service_name" json:"service_name" yaml:"service_name"`
-	Endpoints   []string      `toml:"endpoints" json:"endpoints" yaml:"endpoints"`
-	Discovery   DiscoveryEnum `toml:"discovery" json:"discovery" yaml:"discovery"`
-	TimeoutMs   int64         `toml:"timeout_ms" json:"timeout_ms" yaml:"timeout_ms"`
+	ServiceName        string        `toml:"service_name" json:"service_name" yaml:"service_name"`
+	Endpoints          []string      `toml:"endpoints" json:"endpoints" yaml:"endpoints"`
+	Discovery          DiscoveryEnum `toml:"discovery" json:"discovery" yaml:"discovery"`
+	MaxIdleConns       int           `toml:"max_idle_conns" json:"max_idle_conns" yaml:"max_idle_conns"`
+	IdleConnTimeoutSec int           `toml:"idle_conn_timeout_sec" json:"idle_conn_timeout_sec" yaml:"idle_conn_timeout_sec"`
+	TimeoutMs          int           `toml:"timeout_ms" json:"timeout_ms" yaml:"timeout_ms"`
+	ProxyURL           string        `toml:"proxy_url" json:"proxy_url" yaml:"proxy_url"`
 }
 
 func (c *Config) ToInstances() []instance.Instance {

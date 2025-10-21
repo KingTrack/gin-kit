@@ -24,9 +24,7 @@ func (r *Registry) Add(ctx context.Context, config *conf.Config) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
-	client.New()
-
-	return nil
+	return client.New().Init(ctx, config)
 }
 
 func (r *Registry) Get(name string) *client.Client {

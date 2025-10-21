@@ -26,7 +26,7 @@ func Get() *engine.Engine {
 		return runtimeE
 	}
 
-	// 慢路径：未初始化，使用 once.Call 保证只初始化一次
+	// 慢路径：未初始化，使用 once.Do 保证只初始化一次
 	once.Do(func() {
 		runtimeE = engine.NewDefault()
 	})
