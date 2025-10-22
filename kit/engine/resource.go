@@ -156,3 +156,16 @@ func initKafkaProducer(e *Engine) ResourceOption {
 		return nil
 	}
 }
+
+func initKafkaConsumer(e *Engine) ResourceOption {
+	return func(ctx context.Context, config *conf.Config) error {
+		if len(config.KafkaConsumer) == 0 {
+			return nil
+		}
+
+		if err := e.kafkaConsumerRegistry.Init(ctx, config.KafkaConsumer); err != nil {
+			return errors.WithMessage(err, "kafka consumer 初始化失败")
+		}
+		return nil
+	}
+}

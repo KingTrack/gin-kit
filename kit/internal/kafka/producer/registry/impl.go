@@ -32,7 +32,7 @@ func (r *Registry) Init(ctx context.Context, configs []conf.Config) error {
 
 		syncProducer, err := sarama.NewSyncProducer(config.Addrs, kafkaConfig)
 		if err != nil {
-			return errors.WithMessagef(err, "kafka syncProducer registry create sync syncProducer failed, name:%s", config.Name)
+			return errors.WithMessagef(err, "kafka producer registry create sync producer failed, name:%s", config.Name)
 		}
 
 		r.addOrUpdate(config.Name, syncProducer)

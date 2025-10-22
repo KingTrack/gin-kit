@@ -4,6 +4,7 @@ import (
 	contextregistry "github.com/KingTrack/gin-kit/kit/internal/context/registry"
 	datacenterregistry "github.com/KingTrack/gin-kit/kit/internal/datacenter/registry"
 	httpclientregistry "github.com/KingTrack/gin-kit/kit/internal/httpclient/registry"
+	kafkaconsumerregistry "github.com/KingTrack/gin-kit/kit/internal/kafka/consumer/registry"
 	kafkaproducerregistry "github.com/KingTrack/gin-kit/kit/internal/kafka/producer/registry"
 	loggerregistry "github.com/KingTrack/gin-kit/kit/internal/logger/registry"
 	metricregistry "github.com/KingTrack/gin-kit/kit/internal/metric/registry"
@@ -51,4 +52,8 @@ func (e *Engine) RedisRegistry() *redisregistry.Registry {
 
 func (e *Engine) KafkaProducer() *kafkaproducerregistry.Registry {
 	return e.kafkaProducerRegistry
+}
+
+func (e *Engine) KafkaConsumer() *kafkaconsumerregistry.Registry {
+	return e.kafkaConsumerRegistry
 }

@@ -7,6 +7,7 @@ import (
 	datacenterconf "github.com/KingTrack/gin-kit/kit/types/datacenter/conf"
 	httpclientconf "github.com/KingTrack/gin-kit/kit/types/httpclient/conf"
 	serverconf "github.com/KingTrack/gin-kit/kit/types/httpserver/conf"
+	kafkaconsumerconf "github.com/KingTrack/gin-kit/kit/types/kafka/consumer/conf"
 	kafkaproducerconf "github.com/KingTrack/gin-kit/kit/types/kafka/producer/conf"
 	loggerconf "github.com/KingTrack/gin-kit/kit/types/logger/conf"
 	metricconf "github.com/KingTrack/gin-kit/kit/types/metric/conf"
@@ -27,6 +28,7 @@ type Config struct {
 	MySQL         []mysqlconf.Config         `toml:"mysql" json:"mysql" yaml:"mysql"`
 	Redis         []redisconf.Config         `toml:"redis" json:"redis" yaml:"redis"`
 	KafkaProducer []kafkaproducerconf.Config `toml:"kafka_producer" json:"kafka_producer" yaml:"kafka_producer"`
+	KafkaConsumer []kafkaconsumerconf.Config `toml:"kafka_consumer" json:"kafka_consumer" yaml:"kafka_consumer"`
 }
 
 type Namespace struct {
