@@ -17,7 +17,7 @@ type Registry struct {
 
 func New() *Registry {
 	return &Registry{
-		producers: make(map[string]sarama.SyncProducer, 4),
+		producers: make(map[string]sarama.SyncProducer, 2),
 	}
 }
 

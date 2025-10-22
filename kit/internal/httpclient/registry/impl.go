@@ -15,7 +15,7 @@ type Registry struct {
 
 func New() *Registry {
 	return &Registry{
-		clients: make(map[string]*client.HTTPClient),
+		clients: make(map[string]*client.HTTPClient, 2),
 	}
 }
 

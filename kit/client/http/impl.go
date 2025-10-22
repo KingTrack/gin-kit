@@ -22,6 +22,10 @@ func New(ctx context.Context, name string) IClient {
 }
 
 func (c *Client) Do(ctx context.Context, req *request.Request) (*response.Response, error) {
+	if runtime.Get().HTTPClientRegistry() == nil {
+		return nil, ErrHTTPClientNotFound
+	}
+
 	if c := runtime.Get().HTTPClientRegistry().Get(c.name); c != nil {
 		return c.Do(ctx, req)
 	}

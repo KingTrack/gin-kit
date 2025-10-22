@@ -19,7 +19,7 @@ type Registry struct {
 
 func New() *Registry {
 	return &Registry{
-		dbs: make(map[tlscontext.ResourceName]*DB, 4),
+		dbs: make(map[tlscontext.ResourceName]*DB, 2),
 	}
 }
 
