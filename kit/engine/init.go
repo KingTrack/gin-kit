@@ -7,6 +7,7 @@ import (
 	contextregistry "github.com/KingTrack/gin-kit/kit/internal/context/registry"
 	datacenterregistry "github.com/KingTrack/gin-kit/kit/internal/datacenter/registry"
 	httpclientregistry "github.com/KingTrack/gin-kit/kit/internal/httpclient/registry"
+	kafkaproducerregistry "github.com/KingTrack/gin-kit/kit/internal/kafka/producer/registry"
 	loggerregistry "github.com/KingTrack/gin-kit/kit/internal/logger/registry"
 	metricregistry "github.com/KingTrack/gin-kit/kit/internal/metric/registry"
 	mysqlregistry "github.com/KingTrack/gin-kit/kit/internal/mysql/registry"
@@ -22,6 +23,7 @@ type Engine struct {
 	httpClientRegistry     *httpclientregistry.Registry
 	mysqlRegistry          *mysqlregistry.Registry
 	redisRegistry          *redisregistry.Registry
+	kafkaProducerRegistry  *kafkaproducerregistry.Registry
 	globalResourceFuncs    []ResourceOption
 	namespaceResourceFuncs []ResourceOption
 	tracerRegistry         *tracerregistry.Registry
@@ -44,15 +46,16 @@ func NewDefault() *Engine {
 func New(path string) *Engine {
 
 	engine := &Engine{
-		path:               path,
-		httpClientRegistry: httpclientregistry.New(),
-		mysqlRegistry:      mysqlregistry.New(),
-		redisRegistry:      redisregistry.New(),
-		tracerRegistry:     tracerregistry.New(),
-		loggerRegistry:     loggerregistry.New(),
-		metricRegistry:     metricregistry.New(),
-		contextRegistry:    contextregistry.New(),
-		datacenterRegistry: datacenterregistry.New(),
+		path:                  path,
+		httpClientRegistry:    httpclientregistry.New(),
+		mysqlRegistry:         mysqlregistry.New(),
+		redisRegistry:         redisregistry.New(),
+		kafkaProducerRegistry: kafkaproducerregistry.New(),
+		tracerRegistry:        tracerregistry.New(),
+		loggerRegistry:        loggerregistry.New(),
+		metricRegistry:        metricregistry.New(),
+		contextRegistry:       contextregistry.New(),
+		datacenterRegistry:    datacenterregistry.New(),
 	}
 
 	engine.globalResourceFuncs = []ResourceOption{
@@ -66,6 +69,7 @@ func New(path string) *Engine {
 		initHTTPClient(engine),
 		initMySQL(engine),
 		initRedis(engine),
+		initKafkaProducer(engine),
 	}
 
 	return engine

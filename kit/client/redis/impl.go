@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/KingTrack/gin-kit/kit/runtime"
+	"github.com/KingTrack/gin-kit/kit/types/redis/unknown"
 	"github.com/redis/go-redis/v9"
 )
 
@@ -16,9 +17,8 @@ func New(name string) IRedis {
 }
 
 func (r *Redis) Client(ctx context.Context) *redis.Client {
-	db := runtime.Get().RedisRegistry().GetRedis(ctx, r.name)
-	if db == nil {
-		return nil
+	if runtime.Get().RedisRegistry() == nil {
+		return unknown.NewClient()
 	}
-	return db
+	return runtime.Get().RedisRegistry().GetRedis(ctx, r.name)
 }

@@ -8,6 +8,7 @@ import (
 
 	tlscontext "github.com/KingTrack/gin-kit/kit/internal/tls/context"
 	"github.com/KingTrack/gin-kit/kit/types/redis/conf"
+	"github.com/KingTrack/gin-kit/kit/types/redis/unknown"
 	"github.com/redis/go-redis/v9"
 )
 
@@ -49,9 +50,9 @@ func newRedis(ctx context.Context, config *conf.Config) (*redis.Client, error) {
 		Addr:           config.Addr, // 单节点，可拓展集群
 		Password:       config.Password,
 		DB:             config.DB,
-		DialTimeout:    time.Duration(config.TimeoutMs) * time.Millisecond,
-		ReadTimeout:    time.Duration(config.TimeoutMs) * time.Millisecond,
-		WriteTimeout:   time.Duration(config.TimeoutMs) * time.Millisecond,
+		DialTimeout:    time.Duration(config.ConnTimeoutMs) * time.Millisecond,
+		ReadTimeout:    time.Duration(config.ReadTimeoutMs) * time.Millisecond,
+		WriteTimeout:   time.Duration(config.WriteTimeoutMs) * time.Millisecond,
 		MinIdleConns:   config.MinIdleConns,
 		MaxIdleConns:   config.MaxIdleConns,
 		MaxActiveConns: config.MaxActiveConns,
@@ -76,5 +77,9 @@ func (r *Registry) GetRedis(ctx context.Context, name string) *redis.Client {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 
-	return r.rdbs[resourceName]
+	if rdb, ok := r.rdbs[resourceName]; ok {
+		return rdb
+	}
+
+	return unknown.NewClient()
 }

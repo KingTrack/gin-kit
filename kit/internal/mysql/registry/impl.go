@@ -7,6 +7,7 @@ import (
 
 	tlscontext "github.com/KingTrack/gin-kit/kit/internal/tls/context"
 	"github.com/KingTrack/gin-kit/kit/types/mysql/conf"
+	"github.com/KingTrack/gin-kit/kit/types/mysql/unknown"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -120,5 +121,15 @@ func (r *Registry) GetDB(ctx context.Context, name string) *DB {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 
-	return r.dbs[resourceName]
+	if db, ok := r.dbs[resourceName]; ok {
+		return db
+	}
+
+	unknownDB := unknown.NewDB()
+	return &DB{
+		name:       name,
+		master:     unknownDB,
+		slaves:     []*gorm.DB{unknownDB},
+		slaveIndex: 0,
+	}
 }

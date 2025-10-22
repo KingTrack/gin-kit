@@ -143,3 +143,16 @@ func initRedis(e *Engine) ResourceOption {
 		return nil
 	}
 }
+
+func initKafkaProducer(e *Engine) ResourceOption {
+	return func(ctx context.Context, config *conf.Config) error {
+		if len(config.KafkaProducer) == 0 {
+			return nil
+		}
+
+		if err := e.kafkaProducerRegistry.Init(ctx, config.KafkaProducer); err != nil {
+			return errors.WithMessage(err, "kafka producer 初始化失败")
+		}
+		return nil
+	}
+}
