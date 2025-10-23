@@ -4,7 +4,8 @@ import (
 	"context"
 	"sync"
 
-	"github.com/KingTrack/gin-kit/kit/globals"
+	runtimelogger "github.com/KingTrack/gin-kit/kit/runtime/logger"
+
 	"github.com/KingTrack/gin-kit/kit/internal/datacenter/balancer/define"
 	"github.com/KingTrack/gin-kit/kit/internal/datacenter/balancer/roundroin"
 	consulclient "github.com/KingTrack/gin-kit/kit/internal/datacenter/client/consul"
@@ -27,7 +28,7 @@ type Registry struct {
 
 func New() *Registry {
 	return &Registry{
-		balancers: make(map[string]define.IBalancer),
+		balancers: make(map[string]define.IBalancer, 2),
 	}
 }
 
@@ -91,19 +92,19 @@ func (r *Registry) Init(ctx context.Context, config *conf.Config) error {
 
 func (r *Registry) AddHTTPClient(ctx context.Context, config *httpclientconf.Config) error {
 	if config.Discovery.IsDatacenter() {
-		if err := r.AddServiceToDatacenter(ctx, config.ServiceName); err != nil {
+		if err := r.addServiceToDatacenter(ctx, config.ServiceName); err != nil {
 			return errors.WithMessage(err, "datacenter registry add http client to datacenter failed")
 		}
 		return nil
 	}
 
-	if err := r.AddServiceToLocal(ctx, config); err != nil {
+	if err := r.addServiceToLocal(ctx, config); err != nil {
 		return errors.WithMessage(err, "datacenter registry add http client to local failed")
 	}
 	return nil
 }
 
-func (r *Registry) AddServiceToDatacenter(ctx context.Context, serviceName string) error {
+func (r *Registry) addServiceToDatacenter(ctx context.Context, serviceName string) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
@@ -117,7 +118,7 @@ func (r *Registry) AddServiceToDatacenter(ctx context.Context, serviceName strin
 	return nil
 }
 
-func (r *Registry) AddServiceToLocal(ctx context.Context, config *httpclientconf.Config) error {
+func (r *Registry) addServiceToLocal(ctx context.Context, config *httpclientconf.Config) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
 
@@ -136,12 +137,12 @@ func (r *Registry) AddServiceToLocal(ctx context.Context, config *httpclientconf
 func (r *Registry) runDiscoveryWatcher(ctx context.Context, serviceName string) {
 	for event := range r.discovery.WatchService(ctx, serviceName) {
 		if err := event.Err; err != nil {
-			globals.GetLogger().GenLogger().Printf("datacenter discovery watch %v instances error:%v", serviceName, err)
+			runtimelogger.Get().GenLogger().Printf("datacenter discovery watch %v instances error:%v", serviceName, err)
 			continue
 		}
 		balancer := r.getBalancer(serviceName)
 		if balancer == nil {
-			globals.GetLogger().GenLogger().Printf("datacenter find %s balancer is nil", serviceName)
+			runtimelogger.Get().GenLogger().Printf("datacenter find %s balancer is nil", serviceName)
 			continue
 		}
 		balancer.Update(event.Instances)

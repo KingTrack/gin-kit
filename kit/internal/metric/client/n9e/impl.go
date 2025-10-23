@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/KingTrack/gin-kit/kit/globals"
+	runtimelogger "github.com/KingTrack/gin-kit/kit/runtime/logger"
 
 	"github.com/KingTrack/gin-kit/kit/types/metric/conf"
 
@@ -51,7 +51,7 @@ func (p *Pusher) run() {
 		select {
 		case <-ticker.C:
 			if err := p.send(context.Background()); err != nil {
-				globals.GetLogger().GenLogger().Printf("n9e pusher send metrics error:%v", err)
+				runtimelogger.Get().GenLogger().Printf("n9e pusher send metrics error:%v", err)
 			}
 		}
 	}

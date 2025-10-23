@@ -3,7 +3,7 @@ package client
 import (
 	"context"
 
-	"github.com/KingTrack/gin-kit/kit/globals"
+	runtimelogger "github.com/KingTrack/gin-kit/kit/runtime/logger"
 	"github.com/KingTrack/gin-kit/kit/types/datacenter/conf"
 	"github.com/KingTrack/gin-kit/kit/types/datacenter/discovery"
 	"github.com/KingTrack/gin-kit/kit/types/datacenter/instance"
@@ -55,7 +55,7 @@ func (c *Client) Init(ctx context.Context, config *conf.Nacos) error {
 		return errors.WithMessage(err, "nacos client create config client failed")
 	}
 
-	logger.SetLogger(globals.GetLogger().GenLogger())
+	logger.SetLogger(runtimelogger.Get().GenLogger())
 
 	c.namingClient = namingClient
 	c.configClient = configClient

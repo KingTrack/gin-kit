@@ -3,10 +3,11 @@ package engine
 import (
 	"context"
 
-	"github.com/KingTrack/gin-kit/kit/globals"
+	runtimedatacenter "github.com/KingTrack/gin-kit/kit/runtime/datacenter"
 
 	"github.com/KingTrack/gin-kit/kit/conf"
 	tlscontext "github.com/KingTrack/gin-kit/kit/internal/tls/context"
+	runtimelogger "github.com/KingTrack/gin-kit/kit/runtime/logger"
 	"github.com/pkg/errors"
 	"go.uber.org/multierr"
 )
@@ -78,7 +79,7 @@ func initLogger(e *Engine) ResourceOption {
 		if err := e.loggerRegistry.Init(ctx, &config.Logger); err != nil {
 			return errors.WithMessage(err, "logger 初始化失败")
 		}
-		globals.SetLogger(e.loggerRegistry)
+		runtimelogger.Set(e.loggerRegistry)
 		return nil
 	}
 }
@@ -88,6 +89,7 @@ func initDateCenter(e *Engine) ResourceOption {
 		if err := e.datacenterRegistry.Init(ctx, &config.Datacenter); err != nil {
 			return errors.WithMessage(err, "datacenter 初始化失败")
 		}
+		runtimedatacenter.Set(e.datacenterRegistry)
 		return nil
 	}
 }

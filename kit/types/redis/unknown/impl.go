@@ -22,7 +22,7 @@ func New() *redis.Client {
 
 	client.AddHook(&Hook{})
 
-	return redis.NewClient(opts)
+	return client
 }
 
 type Hook struct{}

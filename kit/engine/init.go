@@ -73,6 +73,7 @@ func New(path string) *Engine {
 		initMySQL(engine),
 		initRedis(engine),
 		initKafkaProducer(engine),
+		initKafkaConsumer(engine),
 	}
 
 	return engine
