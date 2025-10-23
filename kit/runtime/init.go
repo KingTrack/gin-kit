@@ -8,14 +8,14 @@ import (
 
 var (
 	runtimeE *engine.Engine
-	once     sync.Once
+	onceE    sync.Once
 )
 
 func Set(e *engine.Engine) {
 	if e == nil {
 		panic("engine cannot be nil")
 	}
-	once.Do(func() {
+	onceE.Do(func() {
 		runtimeE = e
 	})
 }
@@ -26,8 +26,8 @@ func Get() *engine.Engine {
 		return runtimeE
 	}
 
-	// 慢路径：未初始化，使用 once.Do 保证只初始化一次
-	once.Do(func() {
+	// 慢路径：未初始化，使用 onceE.Do 保证只初始化一次
+	onceE.Do(func() {
 		runtimeE = engine.NewDefault()
 	})
 	return runtimeE

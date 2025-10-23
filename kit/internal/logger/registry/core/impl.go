@@ -79,3 +79,35 @@ func (l *Logger) Printf(template string, args ...interface{}) {
 func (l *Logger) Print(template string) {
 	l.With().Sugar().Debug(template)
 }
+
+func (l *Logger) Info(args ...interface{}) {
+	l.With().Sugar().Info(args...)
+}
+
+func (l *Logger) Warn(args ...interface{}) {
+	l.With().Sugar().Warn(args...)
+}
+
+func (l *Logger) Error(args ...interface{}) {
+	l.With().Sugar().Error(args...)
+}
+
+func (l *Logger) Debug(args ...interface{}) {
+	l.With().Sugar().Debug(args...)
+}
+
+func (l *Logger) Infof(template string, args ...interface{}) {
+	l.With().Sugar().Infof(template, args...)
+}
+
+func (l *Logger) Warnf(template string, args ...interface{}) {
+	l.With().Sugar().Warnf(template, args...)
+}
+
+func (l *Logger) Errorf(template string, args ...interface{}) {
+	l.With().Sugar().Errorf(template, args...)
+}
+
+func (l *Logger) Debugf(template string, args ...interface{}) {
+	l.With().Sugar().Debugf(template, args...)
+}

@@ -3,6 +3,8 @@ package engine
 import (
 	"context"
 
+	"github.com/KingTrack/gin-kit/kit/globals"
+
 	"github.com/KingTrack/gin-kit/kit/conf"
 	tlscontext "github.com/KingTrack/gin-kit/kit/internal/tls/context"
 	"github.com/pkg/errors"
@@ -73,10 +75,10 @@ func initTracer(e *Engine) ResourceOption {
 
 func initLogger(e *Engine) ResourceOption {
 	return func(ctx context.Context, config *conf.Config) error {
-		config.Tracer.ServiceName = config.Server.ServiceName
 		if err := e.loggerRegistry.Init(ctx, &config.Logger); err != nil {
 			return errors.WithMessage(err, "logger 初始化失败")
 		}
+		globals.SetLogger(e.loggerRegistry)
 		return nil
 	}
 }

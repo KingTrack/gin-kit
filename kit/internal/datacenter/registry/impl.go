@@ -4,12 +4,12 @@ import (
 	"context"
 	"sync"
 
+	"github.com/KingTrack/gin-kit/kit/globals"
 	"github.com/KingTrack/gin-kit/kit/internal/datacenter/balancer/define"
 	"github.com/KingTrack/gin-kit/kit/internal/datacenter/balancer/roundroin"
 	consulclient "github.com/KingTrack/gin-kit/kit/internal/datacenter/client/consul"
 	etcdclient "github.com/KingTrack/gin-kit/kit/internal/datacenter/client/etcd"
 	nacosclient "github.com/KingTrack/gin-kit/kit/internal/datacenter/client/nacos"
-	"github.com/KingTrack/gin-kit/kit/runtime"
 	"github.com/KingTrack/gin-kit/kit/types/datacenter/conf"
 	"github.com/KingTrack/gin-kit/kit/types/datacenter/discovery"
 	"github.com/KingTrack/gin-kit/kit/types/datacenter/instance"
@@ -136,12 +136,12 @@ func (r *Registry) AddServiceToLocal(ctx context.Context, config *httpclientconf
 func (r *Registry) runDiscoveryWatcher(ctx context.Context, serviceName string) {
 	for event := range r.discovery.WatchService(ctx, serviceName) {
 		if err := event.Err; err != nil {
-			runtime.Get().LoggerRegistry().GenLogger().Printf("datacenter discovery watch %v instances error:%v", serviceName, err)
+			globals.GetLogger().GenLogger().Printf("datacenter discovery watch %v instances error:%v", serviceName, err)
 			continue
 		}
 		balancer := r.getBalancer(serviceName)
 		if balancer == nil {
-			runtime.Get().LoggerRegistry().GenLogger().Printf("datacenter find %s balancer is nil", serviceName)
+			globals.GetLogger().GenLogger().Printf("datacenter find %s balancer is nil", serviceName)
 			continue
 		}
 		balancer.Update(event.Instances)

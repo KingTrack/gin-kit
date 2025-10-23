@@ -18,7 +18,7 @@ func NewCapture(c *gin.Context) *Capture {
 }
 
 func (c *Capture) SetStatusCode(statusCode int) {
-	if runtime.Get() == nil {
+	if runtime.Get().ContextRegistry() == nil {
 		return
 	}
 
@@ -31,7 +31,7 @@ func (c *Capture) SetStatusCode(statusCode int) {
 }
 
 func (c *Capture) SetData(data []byte) {
-	if runtime.Get() == nil {
+	if runtime.Get().ContextRegistry() == nil {
 		return
 	}
 
@@ -44,7 +44,7 @@ func (c *Capture) SetData(data []byte) {
 }
 
 func (c *Capture) SetHeader(header http.Header) {
-	if runtime.Get() == nil {
+	if runtime.Get().ContextRegistry() == nil {
 		return
 	}
 

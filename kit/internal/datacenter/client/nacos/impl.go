@@ -3,11 +3,10 @@ package client
 import (
 	"context"
 
-	"github.com/KingTrack/gin-kit/kit/types/datacenter/instance"
-
-	"github.com/KingTrack/gin-kit/kit/runtime"
+	"github.com/KingTrack/gin-kit/kit/globals"
 	"github.com/KingTrack/gin-kit/kit/types/datacenter/conf"
 	"github.com/KingTrack/gin-kit/kit/types/datacenter/discovery"
+	"github.com/KingTrack/gin-kit/kit/types/datacenter/instance"
 	"github.com/KingTrack/gin-kit/kit/types/datacenter/watcher"
 	"github.com/nacos-group/nacos-sdk-go/v2/clients"
 	"github.com/nacos-group/nacos-sdk-go/v2/clients/config_client"
@@ -56,7 +55,7 @@ func (c *Client) Init(ctx context.Context, config *conf.Nacos) error {
 		return errors.WithMessage(err, "nacos client create config client failed")
 	}
 
-	logger.SetLogger(runtime.Get().LoggerRegistry().GenLogger())
+	logger.SetLogger(globals.GetLogger().GenLogger())
 
 	c.namingClient = namingClient
 	c.configClient = configClient

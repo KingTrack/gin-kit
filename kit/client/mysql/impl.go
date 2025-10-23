@@ -18,14 +18,14 @@ func New(name string) IMySQL {
 
 func (m *MySQL) Master(ctx context.Context) *gorm.DB {
 	if runtime.Get().MySQLRegistry() == nil {
-		return unknown.NewDB()
+		return unknown.New()
 	}
 	return runtime.Get().MySQLRegistry().GetDB(ctx, m.name).Master()
 }
 
 func (m *MySQL) Slave(ctx context.Context) *gorm.DB {
 	if runtime.Get().MySQLRegistry() == nil {
-		return unknown.NewDB()
+		return unknown.New()
 	}
 	return runtime.Get().MySQLRegistry().GetDB(ctx, m.name).Slave()
 }

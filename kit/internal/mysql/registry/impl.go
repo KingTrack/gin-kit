@@ -125,7 +125,7 @@ func (r *Registry) GetDB(ctx context.Context, name string) *DB {
 		return db
 	}
 
-	unknownDB := unknown.NewDB()
+	unknownDB := unknown.New()
 	return &DB{
 		name:       name,
 		master:     unknownDB,

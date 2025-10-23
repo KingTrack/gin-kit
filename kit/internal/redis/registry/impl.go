@@ -81,5 +81,5 @@ func (r *Registry) GetRedis(ctx context.Context, name string) *redis.Client {
 		return rdb
 	}
 
-	return unknown.NewClient()
+	return unknown.New()
 }

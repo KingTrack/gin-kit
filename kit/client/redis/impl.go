@@ -18,7 +18,7 @@ func New(name string) IRedis {
 
 func (r *Redis) Client(ctx context.Context) *redis.Client {
 	if runtime.Get().RedisRegistry() == nil {
-		return unknown.NewClient()
+		return unknown.New()
 	}
 	return runtime.Get().RedisRegistry().GetRedis(ctx, r.name)
 }

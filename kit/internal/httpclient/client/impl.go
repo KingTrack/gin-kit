@@ -7,9 +7,10 @@ import (
 	"sync"
 	"time"
 
+	"github.com/KingTrack/gin-kit/kit/globals"
+
 	clientcontext "github.com/KingTrack/gin-kit/kit/internal/httpclient/context"
 	"github.com/KingTrack/gin-kit/kit/internal/httpclient/middleware"
-	"github.com/KingTrack/gin-kit/kit/runtime"
 	"github.com/KingTrack/gin-kit/kit/types/httpclient/conf"
 	"github.com/KingTrack/gin-kit/kit/types/httpclient/request"
 	"github.com/KingTrack/gin-kit/kit/types/httpclient/response"
@@ -49,7 +50,7 @@ func (c *HTTPClient) Do(ctx context.Context, req *request.Request) (*response.Re
 		return nil, err
 	}
 
-	instance, err := runtime.Get().DatacenterRegistry().PickInstance(c.config.ServiceName, nil, nil)
+	instance, err := globals.GetDatacenter().PickInstance(c.config.ServiceName, nil, nil)
 	if err != nil {
 		return nil, err
 	}

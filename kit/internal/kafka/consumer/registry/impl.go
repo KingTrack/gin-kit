@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/KingTrack/gin-kit/kit/types/kafka/consumer/conf"
+	"github.com/KingTrack/gin-kit/kit/types/kafka/consumer/unknown"
 	"github.com/Shopify/sarama"
 	"github.com/pkg/errors"
 )
@@ -54,5 +55,5 @@ func (r *Registry) GetConsumer(ctx context.Context, name string) sarama.Consumer
 	if consumer, ok := r.consumers[name]; ok {
 		return consumer
 	}
-	return nil
+	return unknown.New()
 }
