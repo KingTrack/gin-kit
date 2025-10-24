@@ -12,7 +12,7 @@ var (
 )
 
 func Set(registry *datacenterregistry.Registry) {
-	registry = registry
+	runtimeR = registry
 }
 
 func Get() *datacenterregistry.Registry {
