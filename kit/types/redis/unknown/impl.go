@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	ErrUnknownRedisDB = errors.New("unknown redis db")
+	ErrUnknownRedis = errors.New("unknown redis")
 )
 
 func New() *redis.Client {
@@ -29,19 +29,19 @@ type Hook struct{}
 
 func (h *Hook) DialHook(next redis.DialHook) redis.DialHook {
 	return func(ctx context.Context, network, addr string) (net.Conn, error) {
-		return nil, ErrUnknownRedisDB
+		return nil, ErrUnknownRedis
 	}
 }
 
 func (h *Hook) ProcessHook(next redis.ProcessHook) redis.ProcessHook {
 	return func(ctx context.Context, cmd redis.Cmder) error {
-		return ErrUnknownRedisDB
+		return ErrUnknownRedis
 	}
 }
 
 // BeforeProcessPipeline 拦截 pipeline 执行
 func (h *Hook) ProcessPipelineHook(next redis.ProcessPipelineHook) redis.ProcessPipelineHook {
 	return func(ctx context.Context, cmds []redis.Cmder) error {
-		return ErrUnknownRedisDB
+		return ErrUnknownRedis
 	}
 }

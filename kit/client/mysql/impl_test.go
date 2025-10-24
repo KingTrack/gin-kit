@@ -13,10 +13,10 @@ func TestMySQL_Master(t *testing.T) {
 		ID string `grom:"column:id"`
 	}
 	assert.Equal(t, New("my.mysql").Master(context.Background()).
-		Create(&record{}).Error, unknown.ErrUnknownMySQLDB)
+		Create(&record{}).Error, unknown.ErrUnknownMySQL)
 }
 
 func TestMySQL_Slave(t *testing.T) {
 	assert.Equal(t, New("my.mysql").Slave(context.Background()).
-		Select("*").Where(map[string]interface{}{"id": 1}).Error, unknown.ErrUnknownMySQLDB)
+		Select("*").Where(map[string]interface{}{"id": 1}).Error, unknown.ErrUnknownMySQL)
 }
