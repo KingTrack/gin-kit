@@ -21,5 +21,5 @@ func Get() *loggerregistry.Registry {
 }
 
 func Set(registry *loggerregistry.Registry) {
-	registry = registry
+	runtimeR = registry
 }

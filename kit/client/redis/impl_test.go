@@ -9,5 +9,6 @@ import (
 )
 
 func TestRedis_Client(t *testing.T) {
-	assert.Equal(t, New("my.redis").Client(context.Background()).Get(context.Background(), "my.key").Err(), unknown.ErrUnknownRedisDB)
+	assert.Equal(t, New("my.redis").Client(context.Background()).
+		Get(context.Background(), "my.key").Err(), unknown.ErrUnknownRedisDB)
 }

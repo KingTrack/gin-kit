@@ -17,7 +17,7 @@ type Client struct {
 	name string
 }
 
-func New(ctx context.Context, name string) IClient {
+func New(name string) IClient {
 	return &Client{name: name}
 }
 
